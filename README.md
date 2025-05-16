@@ -56,4 +56,4 @@ Then open 👉 `http://127.0.0.1:8000/rps/play/`
 * `urls.py` — routes setup
 * `play_rps_template.html` — game interface
 * `settings.py` — project config
-
+![IMAGE 2025-05-16 11:20:26](https://github.com/user-attachments/assets/cd82e280-6f27-40ab-b458-853e7cce1b1d)
