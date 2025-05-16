@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таш, Кайчы, Кагаз</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 95vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+        h1 {
+            color: #1a73e8; /* Көк түс */
+            margin-bottom: 25px;
+        }
+        .choices button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            min-width: 100px;
+        }
+        .choices button:hover {
+            background-color: #1558b0; /* Бир аз кочкул көк */
+        }
+        .scores {
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+        .scores p {
+            margin: 8px 0;
+        }
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            min-height: 70px; /* Жыйынтык үчүн орун */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .result.win { background-color: #e6ffed; color: #28a745; border: 1px solid #c3e6cb; }
+        .result.lose { background-color: #ffebee; color: #dc3545; border: 1px solid #f5c6cb; }
+        .result.draw { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .result p { margin: 5px 0; }
+
+        .reset-button {
+            margin-top: 20px;
+            background-color: #6c757d; /* Боз түс */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .reset-button:hover {
+            background-color: #5a6268;
+        }
+        .choice-display span {
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Таш, Кайчы, Кагаз!</h1>
+
+        <form method="post" action="{% url 'play_rps_url' %}" class="choices">
+            {% csrf_token %}
+            {% for item in choices %}
+                <button type="submit" name="choice" value="{{ item }}">{{ item|capfirst }}</button>
+            {% endfor %}
+        </form>
+
+        {% if round_result %}
+            <div class="result 
+                {% if 'сиз уттуңуз' in round_result %}win{% elif 'компьютер утту' in round_result %}lose{% elif 'тең чыгуу' in round_result %}draw{% endif %}">
+                
+                {% if player_choice_display and computer_choice_display %}
+                    <p class="choice-display">Сиздин тандооңуз: <span>{{ player_choice_display|capfirst }}</span></p>
+                    <p class="choice-display">Компьютердин тандоосу: <span>{{ computer_choice_display|capfirst }}</span></p>
+                {% endif %}
+                <p><strong>{{ round_result|capfirst }}!</strong></p>
+            </div>
+        {% else %}
+             <div class="result" style="border: 1px solid #eee; color: #777;">
+                <p>Тандоо жасаңыз...</p>
+            </div>
+        {% endif %}
+
+        <div class="scores">
+            <p>Сиздин упайыңыз: {{ player_score }}</p>
+            <p>Компьютердин упайы: {{ computer_score }}</p>
+        </div>
+
+        <form method="post" action="{% url 'reset_scores_url' %}">
+            {% csrf_token %}
+            <button type="submit" class="reset-button">Упайларды тазалоо</button>
+        </form>
+
+    </div>
+</body>
+</html>
